@@ -23,14 +23,15 @@ REPEAT_CHOICES = [
 # Create your models here.
 
 class Task(models.Model):
+    task = models.CharField(max_length=64)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tasks')
     created = models.DateTimeField(auto_now_add=True)
     due = models.DateTimeField(null=True, blank=True)
     completed = models.BooleanField(default=False)
     priority = models.SmallIntegerField(choices=PRIOTRITY_CHOICES, null=True, blank=True)
-    repeat = models.CharField(choices=REPEAT_CHOICES, null=True, blank=True)
+    repeat = models.CharField(choices=REPEAT_CHOICES, null=True, blank=True, max_length=16)
     end_repeat = models.DateField(auto_now=False, auto_now_add=False, null=True)
-    assigned = models.ManyToManyField(User, related_name="assignments", blank=True, null=True, through=Assignment)
+    assigned = models.ManyToManyField(User, related_name="assignments", blank=True, null=True, through='Assignment')
 
 class Assignment(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
