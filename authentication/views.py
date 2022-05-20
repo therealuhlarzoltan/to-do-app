@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.decorators import login_required
 
 from .forms import SignUpForm
 
@@ -15,11 +16,12 @@ def login_view(request):
     context = {
         "form": form,
         "btn_label": "Login",
-        "title": "Login"
+        "title": "Login",
+        "template_name":"components/login_form.html"
     }
     return render(request, "authentication/auth.html", context)
 
-
+@login_required
 def logout_view(request):
     if request.user.is_authenticated:
         if request.method == "POST":
@@ -29,7 +31,8 @@ def logout_view(request):
             "form": None,
             "description": "Are you sure you want to logout?",
             "btn_label": "Click to Confirm",
-            "title": "Logout"
+            "title": "Logout",
+            "template_name":"components/logout_form.html"
         }
     else:
         return redirect("/")
@@ -45,6 +48,7 @@ def register_view(request):
     context = {
         "form": form,
         "btn_label": "Register",
-        "title": "Register"
+        "title": "Register",
+        "template_name":"components/register_form.html"
     }
     return render(request, "authentication/auth.html", context)

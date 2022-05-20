@@ -1,0 +1,20 @@
+{% load myfilters %}
+
+<form method='POST'> {% csrf_token %}
+    <div class="form-group">
+        <label>Username</label>
+        {{ form.username|addclass:'form-control' }}
+    </div>
+    <div class="form-group">
+        <label>Password</label>
+        {{ form.password|addclass:'form-control' }}
+    </div>
+    <div>
+    {% if form.error_messages %}
+    <small class="form-text text-danger">Please enter a correct username and password. Note that both fields may be case-sensitive.</small>
+    {% endif %}
+    </div>
+    <br>
+    <button type='submit' class='btn btn-primary'>{% if btn_label %}
+        {{btn_label}} {% else %}Save{% endif %}</button>
+</form>

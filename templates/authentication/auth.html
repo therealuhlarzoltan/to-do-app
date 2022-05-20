@@ -4,13 +4,22 @@
 
 {% block content %}
 
-<div class='col-10 col-md-4 mx-auto'>
+<div class='col-10 col-md-8 mx-auto py-3 px-3 mt-2' id="background">
     <h1>{{ title }}</h1>
     {% if description %}
     <p>{{ description }} </p>
     {% endif %}
-    {% include "components/form.html" with form=form btn_label=btn_label %}
+    {% include template_name with form=form btn_label=btn_label %}
 
 </div>
+
+<style>
+    body {background-color: #15acf3;}
+    #background {border:.5px solid #000000;
+  background: white;
+  border-radius:10px;
+  box-shadow:0px 0px 10px slategray;}
+
+</style>
 
 {% endblock content %}
