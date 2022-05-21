@@ -31,7 +31,7 @@ class Task(models.Model):
     completed = models.BooleanField(default=False)
     priority = models.SmallIntegerField(choices=PRIOTRITY_CHOICES, null=True, blank=True)
     repeat = models.CharField(choices=REPEAT_CHOICES, null=True, blank=True, max_length=16)
-    end_repeat = models.DateField(auto_now=False, auto_now_add=False, null=True)
+    end_repeat = models.DateField(auto_now=False, auto_now_add=False, null=True, blank=True)
     assigned = models.ManyToManyField(User, related_name="assignments", blank=True, null=True, through='Assignment')
     list = models.ForeignKey('List', on_delete=models.CASCADE, blank=True, null=True)
 

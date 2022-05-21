@@ -3,6 +3,47 @@
 {% block title %}{{title}}{% endblock title %}
 
 {% block content %}
-<h1>{{title}}</h1>
+<h1 id="title">{{title}}</h1>
 {% include template_name with form=form %}
+
+
+
+
+<script>
+
+    function handleCreationFormDidSubmit(event) {
+        event.preventDefault()
+        const form = event.target
+        const formData = new FormData(form)
+        const url = form.getAttribute('action')
+        console.log(url)
+        const method = form.getAttribute('method')
+        const xhr = new XMLHttpRequest()
+        const responseType = "json"
+        xhr.responseType = responseType
+        xhr.open(method, url)
+        xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest")
+        xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+        xhr.onload = function() {
+            if (xhr.status === 201) {
+                console.log(xhr.response)
+                window.location.href='/'
+                form.reset()
+                
+            }
+        }
+        xhr.send(formData)
+    }
+
+    formElement = document.getElementById('form');
+
+    formElement.addEventListener('submit', CreationFormDidSubmit)
+
+
+
+
+
+
+
+</script>
 {% endblock content %}

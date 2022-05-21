@@ -1,4 +1,5 @@
-<form method='POST'>
+<form method='POST' id='form' action='{% url 'task-create-api' %}'>
     {% csrf_token %}
     {{form.as_p}}
+    <button type="submit" class="btn btn-primary">Create Task</button>
 </form>
