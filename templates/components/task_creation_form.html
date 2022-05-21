@@ -1,5 +1,44 @@
+{% load myfilters %}
+
 <form method='POST' id='form' action='{% url 'task-create-api' %}'>
     {% csrf_token %}
-    {{form.as_p}}
+    <div class="form-group">
+        <label>Task</label>
+        {{ form.task|addclass:'form-control' }}
+        <small class="form-text text-danger">{{form.task.errors}}</small>
+        
+    </div>
+    <div class="form-group">
+        <label>Priority</label>
+        {{ form.priority|addclass:'form-control' }}
+        <small class="form-text text-danger">{{form.priority.errors}}</small>
+    </div>
+    <div class="form-group">
+        <label>List</label>
+        {{ form.list|addclass:'form-control' }}
+        <small class="form-text text-danger">{{form.list.errors}}</small>
+        {% comment %} <small class="form-text text-muted">{{form.password1.help_text}}</small> {% endcomment %}
+    </div>
+    <div class="form-group">
+        <label>Due</label>
+        {{ form.due|addclass:'form-control' }}
+        <small class="form-text text-danger">{{form.due.errors}}</small>
+    </div>
+    <div class="form-group">
+        <label>Repeat</label>
+        {{ form.repeat|addclass:'form-control' }}
+        <small class="form-text text-danger">{{form.repeat.errors}}</small>
+    </div>
+    <div class="form-group">
+        <label>End Repeat</label>
+        {{ form.end_repeat|addclass:'form-control' }}
+        <small class="form-text text-danger">{{form.end_repeat.errors}}</small>
+    </div>
+    <div class="form-group">
+        <label>Assigned to</label>
+        {{ form.assigned|addclass:'form-control' }}
+        <small class="form-text text-danger">{{form.assigned.errors}}</small>
+    </div>
+    <br>
     <button type="submit" class="btn btn-primary">Create Task</button>
 </form>
