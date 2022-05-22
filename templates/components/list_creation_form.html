@@ -1,5 +1,9 @@
 <form method='POST' action="{% url 'list-create-api' %}">
     {% csrf_token %}
-    {{form.as_p}}
+    <div class="form-group">
+        <label for="list-input">List</label>
+        <input type="text" name="list" id="list-input" class="form-control" maxlength='64' minlength='1'>
+    </div>
+    <br>
     <button type="submit" class="btn btn-primary">Create List</button>
 </form>

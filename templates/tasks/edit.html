@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}{{title}}{% endblock title %}
+
+{% block content %}
+
+<div class='col-10 col-md-8 mx-auto py-3 px-3 mt-2' id="background">
+<h1 id="title">{{title}}</h1>
+{% include template_name %}
+</div>
+
+{% endblock %}

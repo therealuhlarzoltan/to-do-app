@@ -21,8 +21,9 @@ def task_create_view(request):
         task_obj = form.save(commit=False)
         task_obj.owner = request.user
         task_obj.save()
+        task_obj.assigned.add(request.POST.get('assigned'))
         return Response({"message":"Task created!"}, status=201)
-    return Response({}, status=400)
+    return Response({'message':'Invalid task.'}, status=400)
 
 @api_view(['POST', 'GET'])
 @permission_classes([IsAuthenticated])
@@ -64,7 +65,7 @@ def list_create_view(request):
         list_obj.user = request.user
         list_obj.save()
         return Response({"message":"List created!"}, status=201)
-    return Response({}, status=400)
+    return Response({"message":"Invalid list."}, status=400)
 
 
 @api_view(['POST', 'GET'])

@@ -5,6 +5,7 @@ from .models import PRIOTRITY_CHOICES, REPEAT_CHOICES, Task, List
 repeat_choices = REPEAT_CHOICES
 priority_choices = PRIOTRITY_CHOICES
 
+
 class TaskEditSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     task = serializers.CharField(min_length=1, max_length=64)

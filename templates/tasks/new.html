@@ -3,10 +3,11 @@
 {% block title %}{{title}}{% endblock title %}
 
 {% block content %}
+
+<div class='col-10 col-md-8 mx-auto py-3 px-3 mt-2' id="background">
 <h1 id="title">{{title}}</h1>
 {% include template_name with form=form %}
-
-
+</div>
 
 
 <script>
@@ -42,4 +43,13 @@
 
 
 </script>
+
+<style>
+    body {background-color: #15acf3;}
+    #background {border:.5px solid #000000;
+  background: white;
+  border-radius:10px;
+  box-shadow:0px 0px 10px slategray;}
+
+</style>
 {% endblock content %}
