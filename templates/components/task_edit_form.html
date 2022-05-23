@@ -10,11 +10,17 @@
     <div class="form-group">
         <label for="priority-input">Priority</label>
         <select class="form-control" name="priority" id="priority-input">
+            {% if priority %}
             <option value="{{priority.0}}">{{priority.1}}</option>
+            {% else %}
             <option value="">None</option>
+            {% endif %}
             {% for priority in priorities %}
             <option value="{{priority.0}}">{{priority.1}}</option>
             {% endfor %}
+            {% if priority %}
+            <option value="">None</option>
+            {% endif %}
         </select>
         {% if priority_input_error %}
         <small class="form-text text-danger">{{priority_input_error}}</small>
@@ -23,11 +29,17 @@
     <div class="form-group">
         <label for="list-input">List</label>
         <select class="form-control" name="list" id="list-input">
+            {% if list %}
             <option value="{{list.0}}">{{list.1}}</option>
+            {% else %}
             <option value="">None</option>
+            {% endif %}
             {% for list in lists %}
             <option value="{{list.0}}">{{list.1}}</option>
             {% endfor %}
+            {% if list %}
+            <option value="">None</option>
+            {% endif %}
         </select>
         {% if list_input_error %}
         <small class="form-text text-danger">{{list_input_error}}</small>
@@ -51,11 +63,17 @@
     <div class="form-group">
         <label for="repeat-input">Repeat</label>
         <select class="form-control" name="repeat" id="repeat-input">
+            {% if repeat %}
             <option value="{{repeat.0}}">{{repeat.1}}</option>
+            {% else %}
             <option value="">None</option>
+            {% endif %}
             {% for repeat in repeats %}
             <option value="{{repeat.0}}">{{repeat.1}}</option>
             {% endfor %}
+            {% if repeat %}
+            <option value="">None</option>
+            {% endif %}
         </select>
         {% if repeat_input_error %}
         <small class="form-text text-danger">{{repeat_input_error}}</small>
@@ -78,11 +96,17 @@
     <div class="form-group">
         <label for="assigned-input">Assigned to</label>
         <select class="form-control" name="assigned" id="assigned-input">
+            {% if assigned %}
             <option value="{{assigned.0}}">{{assigned.1}}</option>
+            {% else %}
             <option value="">None</option>
+            {% endif %}
             {% for user in users %}
             <option value="{{user.id}}">{{user.username}}</option>
             {% endfor%}
+            {% if user %}
+            <option value="">None</option>
+            {% endif %}
         </select>
         {% if assigned_input_error %}
             <small class="form-text text-danger">{{assigned_input_error}}</small>

@@ -48,6 +48,14 @@ class List(models.Model):
     def __str__(self):
         return self.list
 
+    def serialize(self):
+        return {
+            'id':self.id,
+            'list':self.list,
+            'timestamp':self.timestamp,
+            'user':self.user
+        }
+
 class ListAssignment(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)

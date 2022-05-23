@@ -10,27 +10,31 @@ from ..forms import ListCreationForm, TaskCreationForm
 
 from ..models import Task, List
 
+from ..serializers import TaskEditSerializer
+
 ALLOWED_HOSTS = settings.ALLOWED_HOSTS
 
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def task_create_view(request):
+    print(request.POST)
     form = TaskCreationForm(request.POST)
     if form.is_valid():
         task_obj = form.save(commit=False)
         task_obj.owner = request.user
         task_obj.save()
-        task_obj.assigned.add(request.POST.get('assigned'))
+        if request.POST.get('assigned'):
+            task_obj.assigned.add(request.POST.get('assigned'))
         return Response({"message":"Task created!"}, status=201)
-    return Response({'message':'Invalid task.'}, status=400)
+    return Response({'message':'Invalid task.', 'error':form.errors}, status=400)
 
 @api_view(['POST', 'GET'])
 @permission_classes([IsAuthenticated])
 def task_delete_view(request, id):
     qs = Task.objects.filter(id=id)
     if not qs.exists():
-        return Response({'message':'Task does not exist.'}, status=400)
+        return Response({'message':'Task does not exist.'}, status=404)
     task_obj = qs.first()
     if request.user != task_obj.owner:
         return Response({'message':'Forbidden.'}, status=403)
@@ -42,7 +46,7 @@ def task_delete_view(request, id):
 def task_complete_view(request, id):
     qs = Task.objects.filter(id=id)
     if not qs.exists():
-        return Response({'message':'Task does not exist'}, status=400)
+        return Response({'message':'Task does not exist'}, status=404)
     task_obj = qs.first()
     if request.user != task_obj.owner:
         return Response({'message':'Forbidden'}, status=403)
@@ -52,8 +56,16 @@ def task_complete_view(request, id):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def task_edit_view(request):
-    pass
+def task_edit_view(request, id):
+    qs = Task.objects.filter(id=id)
+    if not qs.exists():
+        return Response({'message':'Task does not exist'}, status=404)
+    task_obj = qs.first()
+    if task_obj.owner != request.user:
+        return Response({'message':'Forbidden'}, status=403)
+
+
+    return Response({'task':task_obj}, status=200)
 
 
 @api_view(['POST'])
@@ -73,9 +85,15 @@ def list_create_view(request):
 def list_delete_view(request, id):
     qs = List.objects.filter(id=id)
     if not qs.exists():
-        return Response({'message':'List does not exist.'}, status=400)
+        return Response({'message':'List does not exist.'}, status=404)
     list_obj = qs.first()
     if request.user != list_obj.user:
         return Response({'message':'Forbidden.'}, status=403)
     list_obj.delete()
     return Response({}, 200)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def list_edit_view(request, id):
+    pass

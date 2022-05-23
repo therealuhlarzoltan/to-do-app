@@ -1,0 +1,9 @@
+<form method='POST' action="{% url 'list-edit-api' list.id %}">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="list-input">List</label>
+        <input type="text" name="list" id="list-input" class="form-control" maxlength='64' minlength='1' value='{{list.list}}'>
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>
