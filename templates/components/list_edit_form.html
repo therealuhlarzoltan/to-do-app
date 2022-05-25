@@ -1,4 +1,4 @@
-<form method='POST' action="{% url 'list-edit-api' list.id %}">
+<form method='POST' action="{% url 'list-edit-api' list.id %}" id='form'>
     {% csrf_token %}
     <div class="form-group">
         <label for="list-input">List</label>
