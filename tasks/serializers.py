@@ -14,7 +14,7 @@ class TaskEditSerializer(serializers.Serializer):
     repeat = serializers.CharField(min_length=1, max_length=16, read_only=True)
     end_repeat = serializers.DateField(read_only=True)
     list = serializers.IntegerField(read_only=True)
-    assigned = serializers.integerField(read_only=True)
+    assigned = serializers.IntegerField(read_only=True)
 
     def validate_repeat(self, value):
         if value not in repeat_choices and value != None:

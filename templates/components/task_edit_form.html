@@ -1,4 +1,4 @@
-<form method="POST" action="{% url 'task-edit-api' task.id %}">
+<form method="POST" action="{% url 'task-edit-api' task.id %}" id="form">
     {% csrf_token %}
     <div class="form-group">
         <label for="task-input">Task</label>
@@ -10,15 +10,15 @@
     <div class="form-group">
         <label for="priority-input">Priority</label>
         <select class="form-control" name="priority" id="priority-input">
-            {% if priority %}
-            <option value="{{priority.0}}">{{priority.1}}</option>
+            {% if default_priority %}
+            <option value="{{default_priority.0}}">{{default_priority.1}}</option>
             {% else %}
             <option value="">None</option>
             {% endif %}
             {% for priority in priorities %}
             <option value="{{priority.0}}">{{priority.1}}</option>
             {% endfor %}
-            {% if priority %}
+            {% if default_priority %}
             <option value="">None</option>
             {% endif %}
         </select>
@@ -29,15 +29,15 @@
     <div class="form-group">
         <label for="list-input">List</label>
         <select class="form-control" name="list" id="list-input">
-            {% if list %}
-            <option value="{{list.0}}">{{list.1}}</option>
+            {% if default_list %}
+            <option value="{{default_list.0}}">{{default_list.1}}</option>
             {% else %}
             <option value="">None</option>
             {% endif %}
             {% for list in lists %}
             <option value="{{list.0}}">{{list.1}}</option>
             {% endfor %}
-            {% if list %}
+            {% if default_list %}
             <option value="">None</option>
             {% endif %}
         </select>
@@ -63,7 +63,7 @@
     <div class="form-group">
         <label for="repeat-input">Repeat</label>
         <select class="form-control" name="repeat" id="repeat-input">
-            {% if repeat %}
+            {% if default_repeat %}
             <option value="{{repeat.0}}">{{repeat.1}}</option>
             {% else %}
             <option value="">None</option>
@@ -71,7 +71,7 @@
             {% for repeat in repeats %}
             <option value="{{repeat.0}}">{{repeat.1}}</option>
             {% endfor %}
-            {% if repeat %}
+            {% if default_repeat %}
             <option value="">None</option>
             {% endif %}
         </select>

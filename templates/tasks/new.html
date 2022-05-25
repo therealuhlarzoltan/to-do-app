@@ -26,6 +26,23 @@
         xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
         xhr.onload = function() {
             if (xhr.status === 201) {
+                form.reset()
+                window.location.href='/'
+            }
+            else if (xhr.status === 200) {
+                form.reset()
+                window.location.href='/'
+            }
+            else if (xhr.status === 400)
+            {
+                form.reset()
+            }
+            else if (xhr.status === 403)
+            {
+
+            }
+            else if (xhr.status === 404)
+            {
                 
             }
         }
@@ -34,7 +51,7 @@
 
     formElement = document.getElementById('form');
 
-    formElement.addEventListener('submit', CreationFormDidSubmit)
+    formElement.addEventListener('submit', handleCreationFormDidSubmit)
 
 
 

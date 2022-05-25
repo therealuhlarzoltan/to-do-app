@@ -65,7 +65,7 @@ def task_edit_view(request, id):
         return Response({'message':'Forbidden'}, status=403)
 
 
-    return Response({'task':task_obj}, status=200)
+    return Response({}, status=200)
 
 
 @api_view(['POST'])

@@ -63,7 +63,7 @@ def editTaskView(request, id):
     if task_obj.priority:           
         for tuple in priority_choices:
             if task_obj.priority in tuple:
-                priority = tuple
+                priority = (str(tuple[0]), tuple[1])
                 break
 
     list = task_obj.list
@@ -80,8 +80,9 @@ def editTaskView(request, id):
             list = (list.id, list.list.capitalize())
 
     if priority:
+        og_priority = (int(priority[0]), priority[1])
         priorities = PRIOTRITY_CHOICES
-        priorities.remove(priority)
+        priorities.remove(og_priority)
     else:
         priorities = PRIOTRITY_CHOICES
 
@@ -103,18 +104,17 @@ def editTaskView(request, id):
 
 
     # TODO    
-    
-    
-    
-    
+   
+
+
     context = {
-        'repeat':repeat,
+        'default_repeat':repeat,
         'repeats':repeats,
-        'priority':priority,
+        'default_priority':priority,
         'priorities':priorities,
         'assigned':assigned,
         'users':users,
-        'list':list,
+        'default_list':list,
         'lists':lists,
         'task':task_obj,
         'title':'Edit Task',
