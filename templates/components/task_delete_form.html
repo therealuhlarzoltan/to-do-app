@@ -1,0 +1,4 @@
+<form action="{% url 'task-delete-api' task.id %}" method="POST" id="delete-form">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary">Delete Task</button>
+</form>

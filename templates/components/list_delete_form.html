@@ -1,0 +1,4 @@
+<form action="{% url 'list-delete-api' list.id %}" method="POST" >
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary" id='delete-form'>Delete List</button>
+</form>
