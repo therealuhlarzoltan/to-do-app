@@ -1,6 +1,7 @@
+from this import d
 from django.conf import settings
 from django.shortcuts import render, redirect
-from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q
 
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
@@ -9,12 +10,13 @@ from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
 
 import json
+from datetime import date, datetime, timedelta
 
 from ..forms import ListCreationForm, TaskCreationForm
 
 from ..models import Task, List
 
-from ..serializers import TaskEditSerializer, ListEditSerializer
+from ..serializers import TaskEditSerializer, ListEditSerializer, TaskSerializer
 
 
 ALLOWED_HOSTS = settings.ALLOWED_HOSTS
@@ -115,3 +117,15 @@ def list_edit_view(request, id):
         serializer.save()
         return Response({}, status=200)
     return Response({}, status=400)
+
+
+@api_view(['GET'])
+def today_task_view(request, id):
+    today = date.today()
+    qs = Task.objects.filter(
+        (Q(owner__id=id, due__lte=today) |
+        Q(owner__id=id, due=None)) &
+        Q(completed=False)
+    )
+    serializer = TaskSerializer(qs, many=True)
+    return Response(serializer.data, 200)
