@@ -1,16 +1,21 @@
 from django.conf import settings
 from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.parsers import JSONParser
+
+import json
 
 from ..forms import ListCreationForm, TaskCreationForm
 
 from ..models import Task, List
 
-from ..serializers import TaskEditSerializer
+from ..serializers import TaskEditSerializer, ListEditSerializer
+
 
 ALLOWED_HOSTS = settings.ALLOWED_HOSTS
 
@@ -27,9 +32,9 @@ def task_create_view(request):
         if request.POST.get('assigned'):
             task_obj.assigned.add(request.POST.get('assigned'))
         return Response({"message":"Task created!"}, status=201)
-    return Response({'message':'Invalid task.', 'error':form.errors}, status=400)
+    return Response({'message':'Invalid task.'}, status=400)
 
-@api_view(['POST', 'GET'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def task_delete_view(request, id):
     qs = Task.objects.filter(id=id)
@@ -41,7 +46,7 @@ def task_delete_view(request, id):
     task_obj.delete()
     return Response({}, status=200)
 
-@api_view(['POST', 'GET'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def task_complete_view(request, id):
     qs = Task.objects.filter(id=id)
@@ -54,6 +59,7 @@ def task_complete_view(request, id):
     task_obj.save()
     return Response({'completed':task_obj.completed}, status=200)
 
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def task_edit_view(request, id):
@@ -63,9 +69,11 @@ def task_edit_view(request, id):
     task_obj = qs.first()
     if task_obj.owner != request.user:
         return Response({'message':'Forbidden'}, status=403)
-
-
-    return Response({}, status=200)
+    serializer = TaskEditSerializer(task_obj, data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        serializer.save()
+        return Response({}, status=200)
+    return Response({}, status=400)
 
 
 @api_view(['POST'])
@@ -80,7 +88,7 @@ def list_create_view(request):
     return Response({"message":"Invalid list."}, status=400)
 
 
-@api_view(['POST', 'GET'])
+@api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def list_delete_view(request, id):
     qs = List.objects.filter(id=id)
@@ -96,4 +104,14 @@ def list_delete_view(request, id):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def list_edit_view(request, id):
-    pass
+    qs = List.objects.filter(id=id)
+    if not qs.exists():
+        return Response({'message':'List does not exist'}, status=404)
+    list_obj = qs.first()
+    if list_obj.user != request.user:
+        return Response({'message':'Forbidden'}, status=403)
+    serializer = ListEditSerializer(list_obj, data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        serializer.save()
+        return Response({}, status=200)
+    return Response({}, status=400)

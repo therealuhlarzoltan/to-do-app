@@ -1,3 +1,4 @@
+
 from rest_framework import serializers
 
 from .models import PRIOTRITY_CHOICES, REPEAT_CHOICES, Task, List
@@ -7,31 +8,38 @@ priority_choices = PRIOTRITY_CHOICES
 
 
 class TaskEditSerializer(serializers.Serializer):
-    owner = serializers.IntegerField()
-    task = serializers.CharField(min_length=1, max_length=64, read_only=True)
-    due = serializers.DateTimeField(read_only=True)
-    priority = serializers.IntegerField()
-    repeat = serializers.CharField(min_length=1, max_length=16, read_only=True)
-    end_repeat = serializers.DateField(read_only=True)
-    list = serializers.IntegerField(read_only=True)
-    assigned = serializers.IntegerField(read_only=True)
+    id = serializers.IntegerField(read_only=True)
+    owner = serializers.IntegerField(read_only=True)
+    task = serializers.CharField(max_length=64, required=True)
+    due = serializers.DateField(required=False, allow_null=True)
+    priority = serializers.ChoiceField(choices=priority_choices, required=False, allow_null=True)
+    repeat = serializers.ChoiceField(choices=repeat_choices, required=False, allow_null=True)
+    end_repeat = serializers.DateField(required=False, allow_null=True)
+    #assigned = serializers.
+    #list = 
 
-    def validate_repeat(self, value):
-        if value not in repeat_choices and value != None:
-            raise serializers.ValidationError("This is not a valid repeat interval.")
-        return value
 
-    def validate_priority(self, value):
-        if value not in priority_choices and value != None:
-            raise serializers.ValidationError("This is not a valid priority option.")
-        return value
+    def update(self, instance, validated_data):
+        instance.task = validated_data.get('task', instance.task)
+        instance.due = validated_data.get('due', instance.due)
+        instance.priority = validated_data.get('priority', instance.priority)
+        instance.repeat = validated_data.get('repeat', instance.repeat)
+        instance.end_repeat = validated_data.get('end_repeat', instance.end_repeat)
+        #instance.assigned = validated_data.get('assigned', instance.assigned)
+        #instance.list = validated_data.get('list', instance.list)
+        instance.save()
+        return instance
 
-    def validate_assigned(self, value):
-        pass
 
-    def validate_list(self, value):
-        pass
 
 class ListEditSerializer(serializers.Serializer):
-    pass
+    id = serializers.IntegerField(read_only=True)
+    user = serializers.IntegerField(read_only=True)
+    list = serializers.CharField(max_length=64, required=True)
+
+
+    def update(self, instance, validated_data):
+        instance.list = validated_data.get('list', instance.list)
+        instance.save()
+        return instance
 
