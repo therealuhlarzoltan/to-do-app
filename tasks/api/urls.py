@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import task_create_view, list_create_view, list_delete_view, task_delete_view, task_complete_view, task_edit_view, list_edit_view, today_task_view
+from .views import list_task_view, task_create_view, list_create_view, list_delete_view, task_delete_view, task_complete_view, task_edit_view, list_edit_view, today_task_view
 
 urlpatterns = [
     path('create-task/', task_create_view, name='task-create-api'),
@@ -11,5 +11,6 @@ urlpatterns = [
     path('delete-list/<int:id>', list_delete_view, name='list-delete-api'),
     path('edit-list/<int:id>', list_edit_view, name='list-edit-api'),
     path('user/<int:id>/', today_task_view, name='task-today-api'),
+    path('list/<int:id>/', list_task_view, name='list-api')
 
 ]

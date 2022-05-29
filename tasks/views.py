@@ -137,3 +137,14 @@ def editListView(request, id):
     }
 
     return render(request, 'tasks/edit.html', context)
+
+
+@login_required
+def listView(request, id):
+    qs = List.objects.filter(id=id)
+    if not qs.exists():
+        return redirect(reverse('home'))
+    list_obj = qs.first()
+    if list_obj.user != request.user:
+        return redirect(reverse('home'))
+    return render(request, 'tasks/list.html', {'title':list_obj.list, 'list_id':id})

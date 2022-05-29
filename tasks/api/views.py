@@ -129,3 +129,14 @@ def today_task_view(request, id):
     )
     serializer = TaskSerializer(qs, many=True)
     return Response(serializer.data, 200)
+
+
+@api_view(['GET'])
+def list_task_view(request, id):
+    qs = Task.objects.filter(list=id)
+    if not qs.exists():
+        return Response({'message':'List does not exist.'}, status=404)
+    if qs.first().owner != request.user:
+        return Response({'message':'Forbidden.'}, status=403)
+    serializer = TaskSerializer(qs, many=True)
+    return Response(serializer.data, status=200)

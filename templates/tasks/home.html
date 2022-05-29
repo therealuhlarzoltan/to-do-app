@@ -39,7 +39,27 @@ function getUserId() {
 
 function formatTask(element) {
    var li =document.createElement('li')
-   li.innerHTML = element['task']
+   var str = `<div class="ms-2 me-auto"><div><a href="/edit-task/${element['id']}" style="text-decoration:none;color:black;">${element['task']}</a></div>`
+   if (element['list']) {
+    str +=  `<small><a href="/list/${element['list']['id']}" style="text-decoration:none;color:black;">${element['list']['list']}</a></small></div>`
+   } 
+   else {
+       str += '</div>'
+   }
+   li.classList.add("list-group-item")
+   li.classList.add('d-flex')
+   li.classList.add('justifiy-content-between')
+   li.classList.add('align-items-start')
+   if (element['priority'] === 1) {
+       str += '<span><i class="fa-solid fa-exclamation"></i></span>'
+   }
+   else if (element['priority'] === 2) {
+       str  += '<span><i class="fa-solid fa-exclamation"></i><i class="fa-solid fa-exclamation"></i></span>'
+   }
+   else if (element['priority'] === 3) {
+       str += '<span><i class="fa-solid fa-exclamation"></i><i class="fa-solid fa-exclamation"></i><i class="fa-solid fa-exclamation"></i></span>'
+   }
+   li.innerHTML = str
    return li
     
 }
@@ -56,12 +76,10 @@ function displayTasks(response) {
 
 
 function loadTasks() {
-    console.log('Loading')
     const xhr = new XMLHttpRequest()
     const responseType = 'json'
     const user = getUserId()
     const url = `/api/user/${user}/`
-    console.log('url:', url)
     const method = 'GET'
     xhr.responseType = responseType
     xhr.open(method, url)

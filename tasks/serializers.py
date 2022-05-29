@@ -44,9 +44,21 @@ class ListEditSerializer(serializers.Serializer):
         return instance
 
 
+class ListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = List
+        fields = ['id', 'list', 'user']
+
+
 class TaskSerializer(serializers.ModelSerializer):
+
+    list = ListSerializer()
 
     class Meta:
         model = Task
         fields = ['id', 'owner', 'task', 'created', 'due', 'completed', 'priority', 'repeat', 'end_repeat', 'list']
+
+
+
 
