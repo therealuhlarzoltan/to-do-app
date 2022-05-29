@@ -14,7 +14,7 @@ User = get_user_model()
 # Create your views here.
 @login_required
 def homeView(request):
-    return render(request, 'tasks/home.html')
+    return render(request, 'tasks/home.html', {'user_id':request.user.id})
 
 @login_required
 def createTaskView(request):
