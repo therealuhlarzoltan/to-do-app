@@ -39,7 +39,7 @@ function getUserId() {
 
 function formatTask(element) {
    var li =document.createElement('li')
-   var str = `<div class="ms-2 me-auto"><div><a href="/edit-task/${element['id']}" style="text-decoration:none;color:black;">${element['task']}</a></div>`
+   var str = `<div class="ms-2 me-auto"><div><span><i class="fa-regular fa-circle" data-id='${element['id']}'data-completed='${element['completed']}'></i></span><a class='mx-2' href="/edit-task/${element['id']}" style="text-decoration:none;color:black;">${element['task']}</a></div>`
    if (element['list']) {
     str +=  `<small><a href="/list/${element['list']['id']}" style="text-decoration:none;color:black;">${element['list']['list']}</a></small></div>`
    } 
@@ -50,6 +50,7 @@ function formatTask(element) {
    li.classList.add('d-flex')
    li.classList.add('justifiy-content-between')
    li.classList.add('align-items-start')
+   li.setAttribute('id', element['id'])
    if (element['priority'] === 1) {
        str += '<span><i class="fa-solid fa-exclamation"></i></span>'
    }
@@ -96,10 +97,67 @@ function loadTasks() {
 }
 
 
+function completeTask(element) {
+    id = element.dataset.id
+    completed = element.dataset.completed
+    const xhr = new XMLHttpRequest()
+    const responseType = 'json'
+    const url = `/api/complete-task/${id}`
+    const method = 'POST'
+    xhr.open(method, url)
+    xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest")
+    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+    xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'))
+    xhr.onload = function() {
+        const serverResponse = xhr.response
+        const responseArray = serverResponse.split(":")
+        const response = responseArray[1].slice(0, -1)
+        
+        if (response == 'true') {
+        element.classList.remove('fa-regular')
+        element.classList.add('fa-solid')
+        element.dataset.completed = response
+        }
+        else if (response == 'false') {
+            element.classList.remove('fa-solid')
+            element.classList.add('fa-regular')
+            element.dataset.completed = response  
+        }
+        const timeout = 2500
+        setTimeout(() => {
+            if (element.dataset.completed == 'true') {
+            li = document.getElementById(element.dataset.id)
+            li.remove()}
+        }, timeout); 
+    }
+    xhr.send()
+
+    
+    
+
+}
+
+
     document.addEventListener('DOMContentLoaded', function() {
         loadTasks()
+        const checkCircles = document.getElementsByClassName('fa-circle')
+        console.log(checkCircles)
+        const timeout = 200
+        setTimeout(() => {
+            Array.prototype.forEach.call(checkCircles, function(element) {
+                element.addEventListener('click', function() {
+                    completeTask(element)
+                })
+            })
+        }, timeout);
     })
 
 </script>
+
+<style>
+    .fa-circle {
+        cursor: pointer;
+    }
+</style>
 {% endblock content %}
 
