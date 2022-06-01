@@ -58,7 +58,16 @@ function getUserId() {
 
 function formatTask(element) {
    var li =document.createElement('li')
-   var str = `<div class="ms-2 me-auto"><div><span><i class="fa-regular fa-circle" data-id='${element['id']}'data-completed='${element['completed']}' data-created='${element['created']}' data-due='${element['due']}' data-priority='${element['priority']}'></i></span><a class='mx-2' href="/edit-task/${element['id']}" style="text-decoration:none;color:black;">${element['task']}</a></div>`
+   li.dataset.name = `${element['task']}`
+   li.dataset.created = `${element['created']}`
+   if (element['priority']) {
+        li.dataset.priority = `${element['priority']}`
+   }
+   else {
+        li.dataset.priority = '0'
+   }
+   li.dataset.due = `${element['due']}`
+   var str = `<div class="ms-2 me-auto"><div><span><i class="fa-regular fa-circle" data-id='${element['id']}'data-completed='${element['completed']}'></i></span><a class='mx-2' href="/edit-task/${element['id']}" style="text-decoration:none;color:black;">${element['task']}</a></div>`
    if (element['list']) {
     str +=  `<small><a href="/list/${element['list']['id']}" style="text-decoration:none;color:black;">${element['list']['list']}</a></small></div>`
    } 
@@ -157,6 +166,32 @@ function completeTask(element) {
 }
 
 
+const objectComparisonByPriorityCallback = (arrayItemA, arrayItemB) => {
+  if (arrayItemA.dataset.priority < arrayItemB.dataset.priority) {
+    return 1
+  }
+
+  if (arrayItemA.dataset.priority > arrayItemB.dataset.priority) {
+    return -1
+  }
+
+  return 0
+}
+
+
+const objectComparisonByNameCallback = (arrayItemA, arrayItemB) => {
+  if (arrayItemA.dataset.name.toLowerCase() < arrayItemB.dataset.name.toLowerCase()) {
+    return -1
+  }
+
+  if (arrayItemA.dataset.name.toLowerCase() > arrayItemB.dataset.name.toLowerCase()) {
+    return 1
+  }
+
+  return 0
+}
+
+
 function handleSortButtonClicked(event) {
     event.preventDefault()
     const sortMethod = event.target.innerHTML.toLowerCase()
@@ -178,21 +213,36 @@ function handleSortButtonClicked(event) {
 
 function sortByCreated() {
     console.log('by created')
+    const list = [...document.getElementById('todo-list').getElementsByTagName('li')]
+
 }
 
 
 function  sortByName() {
-    console.log('by name')
+    const lis = [...document.getElementById('todo-list').getElementsByTagName('li')]
+    lis.sort(objectComparisonByNameCallback)
+    list = document.getElementById('todo-list')
+    list.innerHTML = ''
+    lis.forEach(li => {
+        list.appendChild(li)
+    })
 }
 
 
 function sortByDue() {
     console.log('by due')
+    const list = [...document.getElementById('todo-list').getElementsByTagName('li')]
 }
 
 
 function sortByPriority() {
-    console.log('by priority')
+    const lis = [...document.getElementById('todo-list').getElementsByTagName('li')]
+    lis.sort(objectComparisonByPriorityCallback)
+    list = document.getElementById('todo-list')
+    list.innerHTML = ''
+    lis.forEach(li => {
+        list.appendChild(li)
+    })
 }
 
 

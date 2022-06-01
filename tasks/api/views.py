@@ -126,7 +126,7 @@ def today_task_view(request, id):
         (Q(owner__id=id, due__lte=today) |
         Q(owner__id=id, due=None)) &
         Q(completed=False)
-    )
+    ).order_by('created')
     serializer = TaskSerializer(qs, many=True)
     return Response(serializer.data, 200)
 
