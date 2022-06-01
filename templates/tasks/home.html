@@ -5,11 +5,30 @@ ToDo App
 {% endblock title %}
 
 {% block content %}
+<h1>Today</h1>
 {{ user_id |json_script:"user-id" }}
 <div class='col-10 col-md-8 mx-auto py-3 px-3 mt-2'>
+<div class="btn-group">
+    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+      Sort by
+    </button>
+    <ul class="dropdown-menu">
+      <li><a class="dropdown-item" href="#" id="by-creation">Created</a></li>
+      <li><a class="dropdown-item" href="#" id="by-priority">Priority</a></li>
+      <li><a class="dropdown-item" href="#" id="by-name">Name</a></li>
+      <li><a class="dropdown-item" href="#" id="by-due">Due to</a></li>
+    </ul>
+  </div>
+</div>
+<div class='col-10 col-md-8 mx-auto py-3 px-3 mt-2'>
     <ul class="list-group list-group-flush" id="todo-list">
-        
-      </ul>
+    </ul>
+</div>
+<div class='col-10 col-md-8 mx-auto py-3 px-3 mt-2'>
+    <div >
+        <span style="display:inline-block ;"><i id="new-reminder-button" style='cursor: pointer;color:#15acf3;' class="fa-solid fa-circle-plus"></i></span>
+        <p style="display:inline-block;padding-left: 0.5rem;color: #15acf3;">New Reminder</p>
+    </div>
 </div>
 
 <script>
@@ -39,7 +58,7 @@ function getUserId() {
 
 function formatTask(element) {
    var li =document.createElement('li')
-   var str = `<div class="ms-2 me-auto"><div><span><i class="fa-regular fa-circle" data-id='${element['id']}'data-completed='${element['completed']}'></i></span><a class='mx-2' href="/edit-task/${element['id']}" style="text-decoration:none;color:black;">${element['task']}</a></div>`
+   var str = `<div class="ms-2 me-auto"><div><span><i class="fa-regular fa-circle" data-id='${element['id']}'data-completed='${element['completed']}' data-created='${element['created']}' data-due='${element['due']}' data-priority='${element['priority']}'></i></span><a class='mx-2' href="/edit-task/${element['id']}" style="text-decoration:none;color:black;">${element['task']}</a></div>`
    if (element['list']) {
     str +=  `<small><a href="/list/${element['list']['id']}" style="text-decoration:none;color:black;">${element['list']['list']}</a></small></div>`
    } 
@@ -138,10 +157,49 @@ function completeTask(element) {
 }
 
 
+function handleSortButtonClicked(event) {
+    event.preventDefault()
+    const sortMethod = event.target.innerHTML.toLowerCase()
+    if (sortMethod === 'created') {
+        sortByCreated()
+    }
+    else if (sortMethod === 'name') {
+        sortByName()
+    }
+    else if (sortMethod === 'due to') {
+        sortByDue()
+    }
+    else if (sortMethod === 'priority') {
+        sortByPriority()
+    }
+
+}
+
+
+function sortByCreated() {
+    console.log('by created')
+}
+
+
+function  sortByName() {
+    console.log('by name')
+}
+
+
+function sortByDue() {
+    console.log('by due')
+}
+
+
+function sortByPriority() {
+    console.log('by priority')
+}
+
+
+
     document.addEventListener('DOMContentLoaded', function() {
         loadTasks()
         const checkCircles = document.getElementsByClassName('fa-circle')
-        console.log(checkCircles)
         const timeout = 200
         setTimeout(() => {
             Array.prototype.forEach.call(checkCircles, function(element) {
@@ -150,7 +208,16 @@ function completeTask(element) {
                 })
             })
         }, timeout);
+        const newReminderButton = document.getElementById('new-reminder-button')
+        newReminderButton.addEventListener('click', function() {
+            window.location.href = '/new-task'
+        })
+        const sortButtons = document.querySelectorAll('.dropdown-item')
+        sortButtons.forEach(button => {
+            button.addEventListener('click', handleSortButtonClicked)
+        })
     })
+    
 
 </script>
 
