@@ -57,7 +57,7 @@ function getUserId() {
 
 
 function formatTask(element) {
-   var li =document.createElement('li')
+   var li = document.createElement('li')
    li.dataset.name = `${element['task']}`
    li.dataset.created = `${element['created']}`
    if (element['priority']) {
@@ -67,6 +67,7 @@ function formatTask(element) {
         li.dataset.priority = '0'
    }
    li.dataset.due = `${element['due']}`
+   
    var str = `<div class="ms-2 me-auto"><div><span><i class="fa-regular fa-circle" data-id='${element['id']}'data-completed='${element['completed']}'></i></span><a class='mx-2' href="/edit-task/${element['id']}" style="text-decoration:none;color:black;">${element['task']}</a></div>`
    if (element['list']) {
     str +=  `<small><a href="/list/${element['list']['id']}" style="text-decoration:none;color:black;">${element['list']['list']}</a></small></div>`
@@ -192,6 +193,36 @@ const objectComparisonByNameCallback = (arrayItemA, arrayItemB) => {
 }
 
 
+const objectComparisonByCreationDateCallback = (arrayItemA, arrayItemB) => {
+    const d1 = new Date(arrayItemA.dataset.created)
+    const d2 = new Date(arrayItemB.dataset.created)
+    if (d1 < d2) {
+        return -1
+    }
+
+    if (d1 > d2) {
+        return 1
+    }
+
+    return 0
+}
+
+
+const objectComparisonByDueDateCallback = (arrayItemA, arrayItemB) => {
+    const d1 = new Date(arrayItemA.dataset.due)
+    const d2 = new Date(arrayItemB.dataset.due)
+    if (d1 < d2) {
+        return -1
+    }
+
+    if (d1 > d2) {
+        return 1
+    }
+
+    return 0
+}
+
+
 function handleSortButtonClicked(event) {
     event.preventDefault()
     const sortMethod = event.target.innerHTML.toLowerCase()
@@ -212,8 +243,13 @@ function handleSortButtonClicked(event) {
 
 
 function sortByCreated() {
-    console.log('by created')
-    const list = [...document.getElementById('todo-list').getElementsByTagName('li')]
+    const lis = [...document.getElementById('todo-list').getElementsByTagName('li')]
+    lis.sort(objectComparisonByCreationDateCallback)
+    list = document.getElementById('todo-list')
+    list.innerHTML = ''
+    lis.forEach(li => {
+        list.appendChild(li)
+    })
 
 }
 
@@ -230,8 +266,13 @@ function  sortByName() {
 
 
 function sortByDue() {
-    console.log('by due')
-    const list = [...document.getElementById('todo-list').getElementsByTagName('li')]
+    const lis = [...document.getElementById('todo-list').getElementsByTagName('li')]
+    lis.sort(objectComparisonByDueDateCallback)
+    list = document.getElementById('todo-list')
+    list.innerHTML = ''
+    lis.forEach(li => {
+        list.appendChild(li)
+    })
 }
 
 
