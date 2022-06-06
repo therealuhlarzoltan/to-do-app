@@ -1,6 +1,7 @@
-from pyexpat import model
 from django.db import models
 from django.conf import settings
+from django.dispatch import receiver
+from django.db.models.signals import post_delete
 
 
 User = settings.AUTH_USER_MODEL
@@ -34,6 +35,8 @@ class Task(models.Model):
     end_repeat = models.DateField(auto_now=False, auto_now_add=False, null=True, blank=True)
     assigned = models.ManyToManyField(User, related_name="assignments", blank=True, null=True, through='Assignment')
     list = models.ForeignKey('List', related_name='lists', on_delete=models.CASCADE, blank=True, null=True)
+
+
 
 class Assignment(models.Model):
     task = models.ForeignKey(Task, related_name='assigned_to', on_delete=models.CASCADE)
