@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block title %}Lists{% endblock title %}
+
+{% block content %}
+<h1>Lists</h1>
+<div class='col-10 col-md-8 mx-auto py-3 px-3 mt-2'>
+    <div class="btn-group">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+          Sort by
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#" id="by-creation">Created</a></li>
+          <li><a class="dropdown-item" href="#" id="by-name">Name</a></li>
+        </ul>
+      </div>
+    </div>
+<div class='col-10 col-md-8 mx-auto py-3 px-3 mt-2'>
+    <ul class="list-group list-group-flush" id="all-lists">
+        {% for list in lists %}
+        <li data-created="{{list.timestamp}}" data-name="{{list.list}}" class="list-group-item" >
+        <a href="{% url 'list' list.id %}" style="text-decoration:none;color:black;">{{list.list}}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div class='col-10 col-md-8 mx-auto py-3 px-3 mt-2'>
+    <div >
+        <span style="display:inline-block ;"><i id="new-list-button" style='cursor: pointer;color:#15acf3;' class="fa-solid fa-circle-plus"></i></span>
+        <p style="display:inline-block;padding-left: 0.5rem;color: #15acf3;">New List</p>
+    </div>
+</div>
+
+<script>
+
+    const objectComparisonByNameCallback = (arrayItemA, arrayItemB) => {
+        if (arrayItemA.dataset.name.toLowerCase() < arrayItemB.dataset.name.toLowerCase()) {
+          return -1
+        }
+      
+        if (arrayItemA.dataset.name.toLowerCase() > arrayItemB.dataset.name.toLowerCase()) {
+          return 1
+        }
+      
+        return 0
+      }
+
+
+      
+    const objectComparisonByCreationDateCallback = (arrayItemA, arrayItemB) => {
+        const d1 = new Date(arrayItemA.dataset.created)
+        const d2 = new Date(arrayItemB.dataset.created)
+        if (d1 < d2) {
+            return -1
+        }
+
+        if (d1 > d2) {
+            return 1
+        }
+
+        return 0
+    }
+
+
+    function handleSortButtonClicked(event) {
+        event.preventDefault()
+        const sortMethod = event.target.innerHTML.toLowerCase()
+        if (sortMethod === 'created') {
+            sortByCreated()
+        }
+        else if (sortMethod === 'name') {
+            sortByName()
+        }
+    }
+
+
+
+    function sortByCreated() {
+        const lis = [...document.getElementById('all-lists').getElementsByTagName('li')]
+        lis.sort(objectComparisonByCreationDateCallback)
+        list = document.getElementById('all-lists')
+        list.innerHTML = ''
+        lis.forEach(li => {
+            list.appendChild(li)
+        })
+    
+    }
+    
+    
+    function  sortByName() {
+        const lis = [...document.getElementById('all-lists').getElementsByTagName('li')]
+        lis.sort(objectComparisonByNameCallback)
+        list = document.getElementById('all-lists')
+        list.innerHTML = ''
+        lis.forEach(li => {
+            list.appendChild(li)
+        })
+    }
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const sortButtons = document.querySelectorAll('.dropdown-item')
+        sortButtons.forEach(button => {
+            button.addEventListener('click', handleSortButtonClicked)
+        })
+        const newListButton = document.getElementById('new-list-button')
+        newListButton.addEventListener('click', function() {
+            window.location.href = '/new-list'
+        })
+    })
+
+
+
+
+
+
+</script>
+
+
+{% endblock content %}

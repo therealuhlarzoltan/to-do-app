@@ -66,7 +66,11 @@ function formatTask(element) {
    else {
         li.dataset.priority = '0'
    }
-   li.dataset.due = `${element['due']}`
+   if (element['due']) {
+        li.dataset.due = `${element['due']}`
+   } else {
+       li.dataset.due = '0'
+   }
    
    var str = `<div class="ms-2 me-auto"><div><span><i class="fa-regular fa-circle" data-id='${element['id']}'data-completed='${element['completed']}'></i></span><a class='mx-2' href="/edit-task/${element['id']}" style="text-decoration:none;color:black;">${element['task']}</a></div>`
    if (element['list']) {
@@ -209,6 +213,16 @@ const objectComparisonByCreationDateCallback = (arrayItemA, arrayItemB) => {
 
 
 const objectComparisonByDueDateCallback = (arrayItemA, arrayItemB) => {
+
+    if (arrayItemA.dataset.due === '0' && arrayItemB.dataset.due != '0') {
+        return 1
+    }
+    if (arrayItemA.dataset.due != '0' && arrayItemB.dataset.due === '0') {
+        return -1
+    }
+    if (arrayItemA.dataset.due === '0' && arrayItemB.dataset.due === '0') {
+        return 0
+    }
     const d1 = new Date(arrayItemA.dataset.due)
     const d2 = new Date(arrayItemB.dataset.due)
     if (d1 < d2) {

@@ -148,3 +148,9 @@ def listView(request, id):
     if list_obj.user != request.user:
         return redirect(reverse('home'))
     return render(request, 'tasks/list.html', {'title':list_obj.list, 'list_id':id})
+
+
+@login_required
+def listsView(request):
+    qs = List.objects.all().filter(user=request.user).order_by('timestamp')
+    return render(request, 'tasks/lists.html', {'lists':qs})

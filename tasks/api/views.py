@@ -133,7 +133,7 @@ def today_task_view(request, id):
 
 @api_view(['GET'])
 def list_task_view(request, id):
-    qs = Task.objects.filter(list=id)
+    qs = Task.objects.filter(list=id, completed=False)
     if not qs.exists():
         return Response({'message':'List does not exist.'}, status=404)
     if qs.first().owner != request.user:

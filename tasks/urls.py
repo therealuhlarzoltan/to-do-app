@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import homeView, createTaskView, createListView, editTaskView, editListView, listView
+from .views import homeView, createTaskView, createListView, editTaskView, editListView, listView, listsView
 
 urlpatterns = [
     path('', homeView, name='home'),
@@ -7,5 +7,6 @@ urlpatterns = [
     path('new-list', createListView, name='new-list'),
     path('edit-task/<int:id>', editTaskView, name='edit-task'),
     path('edit-list/<int:id>', editListView, name='edit-list'),
-    path('list/<int:id>', listView, name='list')
+    path('list/<int:id>', listView, name='list'),
+    path('lists', listsView, name='lists')
 ]
