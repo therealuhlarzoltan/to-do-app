@@ -14,6 +14,9 @@ User = get_user_model()
 # Create your views here.
 @login_required
 def homeView(request):
+    qs = Task.objects.filter(owner=request.user, completed=True)
+    if qs.exists():
+        qs.delete()
     return render(request, 'tasks/home.html', {'user_id':request.user.id})
 
 @login_required
@@ -147,6 +150,9 @@ def listView(request, id):
     list_obj = qs.first()
     if list_obj.user != request.user:
         return redirect(reverse('home'))
+    qs1 = Task.objects.filter(owner=request.user, completed=True, list=list_obj)
+    if qs1.exists():
+        qs1.delete()
     return render(request, 'tasks/list.html', {'title':list_obj.list, 'list_id':id})
 
 
