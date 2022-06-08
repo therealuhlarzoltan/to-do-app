@@ -1,10 +1,10 @@
 
 from rest_framework import serializers
 
-from .models import PRIOTRITY_CHOICES, REPEAT_CHOICES, Task, List
+from .models import PRIORITY_CHOICES, REPEAT_CHOICES, Task, List
 
 repeat_choices = REPEAT_CHOICES
-priority_choices = PRIOTRITY_CHOICES
+priority_choices = PRIORITY_CHOICES
 
 
 class TaskEditSerializer(serializers.Serializer):

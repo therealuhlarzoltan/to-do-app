@@ -1,12 +1,10 @@
 from django.db import models
 from django.conf import settings
-from django.dispatch import receiver
-from django.db.models.signals import post_delete
 
 
 User = settings.AUTH_USER_MODEL
 
-PRIOTRITY_CHOICES = [
+PRIORITY_CHOICES = [
     (1, 'Not important'),
     (2, 'Important'),
     (3, 'Very important')
@@ -30,7 +28,7 @@ class Task(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     due = models.DateField(null=True, blank=True, auto_now=False, auto_now_add=False)
     completed = models.BooleanField(default=False)
-    priority = models.SmallIntegerField(choices=PRIOTRITY_CHOICES, null=True, blank=True)
+    priority = models.SmallIntegerField(choices=PRIORITY_CHOICES, null=True, blank=True)
     repeat = models.CharField(choices=REPEAT_CHOICES, null=True, blank=True, max_length=16)
     end_repeat = models.DateField(auto_now=False, auto_now_add=False, null=True, blank=True)
     assigned = models.ManyToManyField(User, related_name="assignments", blank=True, null=True, through='Assignment')

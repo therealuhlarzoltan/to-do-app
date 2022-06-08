@@ -4,19 +4,25 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 
 from tasks.forms import TaskCreationForm, ListCreationForm
-from tasks.models import REPEAT_CHOICES, PRIOTRITY_CHOICES, Task, List
+from tasks.models import REPEAT_CHOICES, PRIORITY_CHOICES, Task, List
+
+from .repeat import repeat_task
 
 repeat_choices = REPEAT_CHOICES
-priority_choices = PRIOTRITY_CHOICES
+priority_choices = PRIORITY_CHOICES
 
 User = get_user_model()
 
 # Create your views here.
 @login_required
 def homeView(request):
-    qs = Task.objects.filter(owner=request.user, completed=True)
+    qs = Task.objects.filter(owner=request.user, completed=True, repeat=None)
     if qs.exists():
         qs.delete()
+    qs1 = Task.objects.filter(owner=request.user, completed=True).exclude(repeat=None)
+    if qs1.exists():
+        for task in qs1:
+            repeat_task(task)
     return render(request, 'tasks/home.html', {'user_id':request.user.id})
 
 @login_required
@@ -29,7 +35,7 @@ def createTaskView(request):
     users = User.objects.all()
     context = {
         'title':'New Task',
-        'priorities':PRIOTRITY_CHOICES,
+        'priorities':PRIORITY_CHOICES,
         'repeats':REPEAT_CHOICES,
         'lists':lists,
         'users':users,
@@ -84,10 +90,10 @@ def editTaskView(request, id):
 
     if priority:
         og_priority = (int(priority[0]), priority[1])
-        priorities = PRIOTRITY_CHOICES
+        priorities = PRIORITY_CHOICES
         priorities.remove(og_priority)
     else:
-        priorities = PRIOTRITY_CHOICES
+        priorities = PRIORITY_CHOICES
 
     if repeat:
         repeats = REPEAT_CHOICES
@@ -153,6 +159,10 @@ def listView(request, id):
     qs1 = Task.objects.filter(owner=request.user, completed=True, list=list_obj)
     if qs1.exists():
         qs1.delete()
+    qs2 = Task.objects.filter(owner=request.user, completed=True, list=list_obj).exclude(repeat=None)
+    if qs2.exists():
+        for task in qs2:
+            repeat_task(task)
     return render(request, 'tasks/list.html', {'title':list_obj.list, 'list_id':id})
 
 

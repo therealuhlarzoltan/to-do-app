@@ -7,6 +7,14 @@ class TaskCreationForm(forms.ModelForm):
         model = Task
         fields = ['task', 'due', 'priority', 'list', 'assigned', 'repeat', 'end_repeat']
 
+    def clean(self):
+        cleaned_data = super().clean()
+        repeat = cleaned_data.get("repeat")
+        due = cleaned_data.get("due")
+
+        if repeat and not due:
+            raise forms.ValidationError("Submitted repeat without submitting due date.")
+
 class ListCreationForm(forms.ModelForm):
     class Meta:
         model = List
