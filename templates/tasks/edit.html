@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}{{title}}{% endblock title %}
 
@@ -9,94 +10,7 @@
 {% include template_name %}
 </div>
 
-<script>
-
-  function handleEditFormDidSubmit(event) {
-      event.preventDefault()
-      const form = event.target
-      const formData = new FormData(form)
-      const url = form.getAttribute('action')
-      const method = form.getAttribute('method')
-      const xhr = new XMLHttpRequest()
-      const responseType = "json"
-      xhr.responseType = responseType
-      xhr.open(method, url)
-      xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest")
-      xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
-      xhr.onload = function() {
-          if (xhr.status === 201) {
-              form.reset()
-              window.location.href='/'
-          }
-          else if (xhr.status === 200) {
-              form.reset()
-              window.location.href='/'
-          }
-          else if (xhr.status === 400)
-          {
-              form.reset()
-          }
-          else if (xhr.status === 403)
-          {
-
-          }
-          else if (xhr.status === 404)
-          {
-              
-          }
-      }
-      xhr.send(formData)
-  }
-
-
-  function handleDeleteFormDidSubmit(event) {
-      event.preventDefault()
-      const form = event.target
-      const url = form.getAttribute('action')
-      const method = form.getAttribute('method')
-      const xhr = new XMLHttpRequest()
-      const responseType = "json"
-      xhr.responseType = responseType
-      xhr.open(method, url)
-      xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest")
-      xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
-      xhr.onload = function() {
-          if (xhr.status === 200) {
-              form.reset()
-              window.location.href='/'
-          }
-          else if (xhr.status === 400)
-          {
-              form.reset()
-          }
-          else if (xhr.status === 403)
-          {
-
-          }
-          else if (xhr.status === 404)
-          {
-              
-          }
-      }
-      xhr.send(formData)
-  }
-
-
-  formElement = document.getElementById('form');
-
-  //formElement.addEventListener('submit', handleEditFormDidSubmit)
-
-  deleteFormElement = document.getElementById('delete-form')
-  deleteFormElement.addEventListener('submit', handleDeleteFormDidSubmit)
-
-
-
-
-
-
-
-</script>
-
+<script src="{% static 'js/edit.js' %}"></script> 
 
 <style>
     body {background-color: #15acf3;}
