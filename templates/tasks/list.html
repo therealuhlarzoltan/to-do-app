@@ -296,6 +296,62 @@
             list.appendChild(li)
         })
     }
+
+
+    function formatDate(date) {
+        if (date) {
+            var d = new Date(date),
+                month = '' + (d.getMonth() + 1),
+                day = '' + d.getDate(),
+                year = d.getFullYear();
+    
+            if (month.length < 2) 
+                month = '0' + month;
+            if (day.length < 2) 
+                day = '0' + day;
+    
+            return [year, month, day].join('-');
+        }
+        else {
+            var d = new Date(),
+                month = '' + (d.getMonth() + 1),
+                day = '' + d.getDate(),
+                year = d.getFullYear();
+    
+            if (month.length < 2) 
+                month = '0' + month;
+            if (day.length < 2) 
+                day = '0' + day;
+    
+            return [year, month, day].join('-');
+        }
+    }
+
+
+    function checkExpiredDueDate(element) {
+        var dateToCheck = element.dataset.due
+        if (dateToCheck != '0') {
+            dateToCheck = formatDate(dateToCheck)
+            const today = formatDate()
+            if (dateToCheck < today) {
+                element.childNodes[0].childNodes[0].childNodes[1].style.color = 'red'
+            }
+        }
+    }
+
+
+    function markExpiredTasks() {
+        const lis = [...document.getElementById('list').getElementsByTagName('li')]
+        lis.forEach(li => {
+            checkExpiredDueDate(li)
+        })
+    }
+
+
+
+
+
+
     
     
     
@@ -318,6 +374,9 @@
             sortButtons.forEach(button => {
                 button.addEventListener('click', handleSortButtonClicked)
             })
+            setTimeout(() => {
+                markExpiredTasks()
+            }, timeout);
         })
         
     

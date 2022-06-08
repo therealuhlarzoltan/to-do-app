@@ -13,7 +13,7 @@ class TaskCreationForm(forms.ModelForm):
         due = cleaned_data.get("due")
 
         if repeat and not due:
-            raise forms.ValidationError("Submitted repeat without submitting due date.")
+            raise forms.ValidationError("Submitted repeat interval without submitting due date.")
 
 class ListCreationForm(forms.ModelForm):
     class Meta:
