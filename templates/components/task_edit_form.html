@@ -3,9 +3,6 @@
     <div class="form-group">
         <label for="task-input">Task</label>
         <input name="task" class="form-control" id="task-input" type="text" minlength="1" maxlength="64" value="{{task.task}}">
-        {% if task_input_error %}
-        <small class="form-text text-danger">{{task_input_error}}</small>
-        {% endif %}
     </div>
     <div class="form-group">
         <label for="priority-input">Priority</label>
@@ -22,9 +19,6 @@
             <option value="">None</option>
             {% endif %}
         </select>
-        {% if priority_input_error %}
-        <small class="form-text text-danger">{{priority_input_error}}</small>
-        {% endif %}
     </div>
     <div class="form-group">
         <label for="list-input">List</label>
@@ -41,24 +35,12 @@
             <option value="">None</option>
             {% endif %}
         </select>
-        {% if list_input_error %}
-        <small class="form-text text-danger">{{list_input_error}}</small>
-        {% endif %}
     </div>
     <div class='form-group'>
         <label for="datepicker">Due to</label>
-        <input type='text' class="form-control" id='datepicker' name="due" value="{{task.due}}">
+        <input type='text' class="form-control" id='datepicker' name="due" value="{{due}}">
+        <small class="form-text text-muted">Enter date in yyyy-mm-dd format.</small>
        </div>
-       
-       <!-- Script -->
-       <script type="text/javascript">
-       $(document).ready(function(){
-        $('#datepicker').datepicker(); 
-       });
-       </script>
-        {% if date_input_error %}
-        <small class="form-text text-danger">{{date_input_error}}</small>
-        {% endif %}
  
     <div class="form-group">
         <label for="repeat-input">Repeat</label>
@@ -75,45 +57,14 @@
             <option value="">None</option>
             {% endif %}
         </select>
-        {% if repeat_input_error %}
-        <small class="form-text text-danger">{{repeat_input_error}}</small>
-        {% endif %}
     </div>
     <div class="form-group">
         <label for="datepicker1">End Repeat</label>
-        <input type='text' class="form-control" id='datepicker1' name="end_repeat" value="{{task.end_repeat}}">
-       </div>
-       
-       <!-- Script -->
-       <script type="text/javascript">
-       $(document).ready(function(){
-        $('#datepicker1').datepicker(); 
-       });
-       </script>
-            {% if end_input_error %}
-            <small class="form-text text-danger">{{end_input_error}}</small>
-            {% endif %}
-    <div class="form-group">
-        <label for="assigned-input">Assigned to</label>
-        <select class="form-control" name="assigned" id="assigned-input">
-            {% if assigned %}
-            <option value="{{assigned.0}}">{{assigned.1}}</option>
-            {% else %}
-            <option value="">None</option>
-            {% endif %}
-            {% for user in users %}
-            <option value="{{user.id}}">{{user.username}}</option>
-            {% endfor%}
-            {% if user %}
-            <option value="">None</option>
-            {% endif %}
-        </select>
-        {% if assigned_input_error %}
-            <small class="form-text text-danger">{{assigned_input_error}}</small>
-            {% endif %}
+        <input type='text' class="form-control" id='datepicker1' name="end_repeat" value="{{end_repeat}}">
+        <small class="form-text text-muted">Enter date in yyyy-mm-dd format.</small>
     </div>
     <br>
-    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <button type="submit" class="btn btn-primary">Save Changes  <i class="far fa-save"></i></button>
 </form>
 <br>
 {% include "components/task_delete_form.html" %}
