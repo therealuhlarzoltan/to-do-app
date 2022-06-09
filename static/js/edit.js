@@ -1,5 +1,5 @@
 function handleEditFormDidSubmit(event) {
-   // event.preventDefault()
+    event.preventDefault()
     const form = event.target
     const formData = new FormData(form)
     const url = form.getAttribute('action')
@@ -24,7 +24,7 @@ function handleEditFormDidSubmit(event) {
          else if (xhr.status === 400)
          {
              if (url.includes(`${'/api/edit-task/'}`)) {
-                 //alert('Invalid task.')
+                 alert('Invalid task.')
              }
              else if (url.includes(`${'/api/edit-list/'}`)) {
                  alert('Invalid list.')
