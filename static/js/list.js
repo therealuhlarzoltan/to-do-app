@@ -344,4 +344,7 @@ function markExpiredTasks() {
         setTimeout(() => {
             markExpiredTasks()
         }, timeout);
+        const list = getListId()
+        const editListLink = document.getElementById('editListLink')
+        editListLink.setAttribute('href', `/edit-list/${list}`)
     })

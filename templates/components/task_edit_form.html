@@ -7,17 +7,10 @@
     <div class="form-group">
         <label for="priority-input">Priority</label>
         <select class="form-control" name="priority" id="priority-input">
-            {% if default_priority %}
-            <option value="{{default_priority.0}}">{{default_priority.1}}</option>
-            {% else %}
-            <option value="">None</option>
-            {% endif %}
             {% for priority in priorities %}
             <option value="{{priority.0}}">{{priority.1}}</option>
             {% endfor %}
-            {% if default_priority %}
-            <option value="">None</option>
-            {% endif %}
+           
         </select>
     </div>
     <div class="form-group">
@@ -44,18 +37,11 @@
  
     <div class="form-group">
         <label for="repeat-input">Repeat</label>
+        {{default_repeat}}
         <select class="form-control" name="repeat" id="repeat-input">
-            {% if default_repeat %}
-            <option value="{{repeat.0}}">{{repeat.1}}</option>
-            {% else %}
-            <option value="">None</option>
-            {% endif %}
             {% for repeat in repeats %}
             <option value="{{repeat.0}}">{{repeat.1}}</option>
             {% endfor %}
-            {% if default_repeat %}
-            <option value="">None</option>
-            {% endif %}
         </select>
     </div>
     <div class="form-group">

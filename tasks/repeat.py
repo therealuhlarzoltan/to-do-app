@@ -8,7 +8,6 @@ def create_new_task(task, due):
                 task=task.task,
                 priority=task.priority,
                 repeat=task.repeat,
-                #assigned=task.assigned,
                 list=task.list,
                 end_repeat=task.end_repeat,
                 due=due

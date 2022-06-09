@@ -25,14 +25,11 @@ ALLOWED_HOSTS = settings.ALLOWED_HOSTS
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def task_create_view(request):
-    print(request.POST)
-    form = TaskCreationForm(request.POST)
+    appended_data = request.POST.copy()
+    appended_data.update({'owner':request.user.id})
+    form = TaskCreationForm(appended_data or None)
     if form.is_valid():
-        task_obj = form.save(commit=False)
-        task_obj.owner = request.user
-        task_obj.save()
-        if request.POST.get('assigned'):
-            task_obj.assigned.add(request.POST.get('assigned'))
+        form.save()
         return Response({"message":"Task created!"}, status=201)
     return Response({'message':'Invalid task.'}, status=400)
 
@@ -71,10 +68,13 @@ def task_edit_view(request, id):
     task_obj = qs.first()
     if task_obj.owner != request.user:
         return Response({'message':'Forbidden'}, status=403)
-    serializer = TaskEditSerializer(task_obj, data=request.data)
+    appended_data = request.POST.copy()
+    appended_data.update({'owner':request.user.id, 'id':task_obj.id})
+    serializer = TaskEditSerializer(task_obj, data=appended_data)
     if serializer.is_valid(raise_exception=True):
         serializer.save()
         return Response({}, status=200)
+    print(serializer.errors)
     return Response({}, status=400)
 
 
@@ -99,6 +99,9 @@ def list_delete_view(request, id):
     list_obj = qs.first()
     if request.user != list_obj.user:
         return Response({'message':'Forbidden.'}, status=403)
+    qs1 = Task.objects.filter(list=list_obj)
+    if qs1.exists():
+        qs1.delete()
     list_obj.delete()
     return Response({}, 200)
 

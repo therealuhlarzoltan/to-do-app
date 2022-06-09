@@ -8,16 +8,32 @@ priority_choices = PRIORITY_CHOICES
 
 
 class TaskEditSerializer(serializers.Serializer):
-    id = serializers.IntegerField(read_only=True)
-    owner = serializers.IntegerField(read_only=True)
+    id = serializers.IntegerField()
+    owner = serializers.IntegerField()
     task = serializers.CharField(max_length=64, required=True)
     due = serializers.DateField(required=False, allow_null=True)
     priority = serializers.ChoiceField(choices=priority_choices, required=False, allow_null=True)
     repeat = serializers.ChoiceField(choices=repeat_choices, required=False, allow_null=True)
     end_repeat = serializers.DateField(required=False, allow_null=True)
-    #assigned = serializers.
-    #list = 
+    list = serializers.IntegerField(required=False)
 
+
+    class Meta:
+        model = Task
+        fields = ['id', 'owner', 'task', 'due', 'priority', 'repeat', 'end_repeat', 'list']
+
+
+    def validate(self, data):
+        if data.get('list'):
+            valid_lists = List.objects.filter(user__id=data['owner']).values_list('id', flat=True)
+            if data['list'] not in valid_lists:
+                raise serializers.ValidationError('Invalid list.')
+
+        if data.get('repeat'):
+            if not data.get('due'):
+                raise serializers.ValidationError('Submitted repeat interval without due date.')
+
+        return data
 
     def update(self, instance, validated_data):
         instance.task = validated_data.get('task', instance.task)
@@ -25,8 +41,10 @@ class TaskEditSerializer(serializers.Serializer):
         instance.priority = validated_data.get('priority', instance.priority)
         instance.repeat = validated_data.get('repeat', instance.repeat)
         instance.end_repeat = validated_data.get('end_repeat', instance.end_repeat)
-        #instance.assigned = validated_data.get('assigned', instance.assigned)
-        #instance.list = validated_data.get('list', instance.list)
+        if validated_data.get('list'):
+            instance.list = List.objects.get(id=validated_data.get('list'))
+        else:
+            instance.list = None
         instance.save()
         return instance
 

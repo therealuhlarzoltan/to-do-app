@@ -5,8 +5,10 @@
 
 {% block content %}
 {{ list_id |json_script:"list-id" }}
-<h1>{{title}}</h1>
+
 <div class='col-10 col-md-8 mx-auto py-3 px-3 mt-2'>
+    <h1><a id='editListLink' href='#' style='text-decoration:none;color:black;'>{{title}}</a></h1>
+    <br>
     <div class="btn-group">
         <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
           Sort by

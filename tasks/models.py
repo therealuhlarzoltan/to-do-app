@@ -31,15 +31,8 @@ class Task(models.Model):
     priority = models.SmallIntegerField(choices=PRIORITY_CHOICES, null=True, blank=True)
     repeat = models.CharField(choices=REPEAT_CHOICES, null=True, blank=True, max_length=16)
     end_repeat = models.DateField(auto_now=False, auto_now_add=False, null=True, blank=True)
-    assigned = models.ManyToManyField(User, related_name="assignments", blank=True, null=True, through='Assignment')
     list = models.ForeignKey('List', related_name='lists', on_delete=models.CASCADE, blank=True, null=True)
 
-
-
-class Assignment(models.Model):
-    task = models.ForeignKey(Task, related_name='assigned_to', on_delete=models.CASCADE)
-    user = models.ForeignKey(User, related_name='assignments_models', on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(auto_now_add=True)
 
 class List(models.Model):
     list = models.CharField(max_length=64)
@@ -56,8 +49,3 @@ class List(models.Model):
             'timestamp':self.timestamp,
             'user':self.user
         }
-
-class ListAssignment(models.Model):
-    task = models.ForeignKey(Task, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    list = models.ForeignKey(List, on_delete=models.CASCADE)

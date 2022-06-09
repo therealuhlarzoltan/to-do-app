@@ -31,14 +31,11 @@ def createTaskView(request):
     lists = []
     for obj in qs:
         lists.append((obj.id, obj.list.capitalize()))
-    users = []
-    users = User.objects.all()
     context = {
         'title':'New Task',
         'priorities':PRIORITY_CHOICES,
         'repeats':REPEAT_CHOICES,
         'lists':lists,
-        'users':users,
         'template_name':'components/task_creation_form.html',
     }
     return render(request, 'tasks/new.html', context)
@@ -60,71 +57,100 @@ def editTaskView(request, id):
         return redirect(reverse('home'))
     task_obj = qs.first()
     
-    repeat = None
-    priority = None
-
-    if task_obj.repeat:
-        for tuple in repeat_choices:
-            if task_obj.repeat in tuple:
-                repeat = tuple
-                break
-
-    if task_obj.priority:           
-        for tuple in priority_choices:
-            if task_obj.priority in tuple:
-                priority = (str(tuple[0]), tuple[1])
-                break
-
-    list = task_obj.list
+    
+    lis = task_obj.list
     lists = []
-    if list:
-        qs = request.user.lists.all().order_by('list').exclude(id=list.id)
+    if lis:
+        qs = request.user.lists.all().order_by('list').exclude(id=lis.id)
     else:
         qs = request.user.lists.all().order_by('list')
     if qs.exists():
-        serialized_lists = [list.serialize() for list in qs]
+        serialized_lists = [lis.serialize() for lis in qs]
         for dict in serialized_lists:
             lists.append((dict.get('id'), dict.get('list').capitalize()))
-        if list:
-            list = (list.id, list.list.capitalize())
+        if lis:
+            lis = (lis.id, lis.list)
+
+
+    priority = None
+    priorities = []
+
+    if task_obj.priority:   
+        if task_obj.priority == 1:
+            priority = 1
+        if task_obj.priority == 2:
+            priority = 2    
+        if task_obj.priority == 3:
+            priority = 3          
+        
+    else:
+        priorities = [
+            ('', 'None'),
+            (1, 'Not Important'),
+            (2, 'Important'),
+            (3, 'Very Important')
+        ]
 
     if priority:
-        og_priority = (int(priority[0]), priority[1])
-        priorities = PRIORITY_CHOICES
-        priorities.remove(og_priority)
-    else:
-        priorities = PRIORITY_CHOICES
+        if priority == 1:
+            priorities = [
+            (1, 'Not Important'),
+            (2, 'Important'),
+            (3, 'Very Important'),
+            ('', 'None')
+        ]
+        if priority == 2:
+           priorities = [
+            (2, 'Important'),
+            (1, 'Not Important'),
+            (3, 'Very Important'),
+            ('', 'None')
+        ]
+        elif priority == 3:
+            priorities = [
+            (3, 'Very Important'),
+            (1, 'Not Important'),
+            (2, 'Important'),
+            ('', 'None')
+        ]
+            
+    
+    repeat = None
+    repeats = None
+    
+    if task_obj.repeat:
+        repeat = task_obj.repeat
 
     if repeat:
         repeats = REPEAT_CHOICES
-        repeats.remove(repeat)
+        repeat_tuple = list(filter(lambda r: r[0] == repeat, repeats))
+        sorted = list(filter(lambda r: r[0] != repeat, repeats))
+        if not ('', 'None') in sorted:
+            sorted.append(('', 'None'))
+        if not repeat_tuple[0] in sorted:
+            sorted.insert(0, repeat_tuple[0])
+        repeats = sorted
     else:
         repeats = REPEAT_CHOICES
+        if not ('', 'None') in repeats:
+            repeats.insert(0, ('', 'None'))
 
-    assigned = None
-    qs = task_obj.assigned.all()
-    if qs.exists():
-        assigned_user_obj = qs.first()
-        assigned = (assigned_user_obj.id, assigned_user_obj.username)
+    due = task_obj.due
+    if not due:
+        due = ''
 
-
-
-    users = None
-
-
-    # TODO    
-   
+    end_repeat = task_obj.end_repeat
+    if not end_repeat:
+        end_repeat = ''
 
 
     context = {
-        'default_repeat':repeat,
         'repeats':repeats,
-        'default_priority':priority,
         'priorities':priorities,
-        'assigned':assigned,
-        'users':users,
-        'default_list':list,
+        'default_list':lis,
         'lists':lists,
+        'due':due,
+        'end_repeat':end_repeat,
         'task':task_obj,
         'title':'Edit Task',
         'template_name':'components/task_edit_form.html'

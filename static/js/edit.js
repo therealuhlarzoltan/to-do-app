@@ -1,5 +1,5 @@
 function handleEditFormDidSubmit(event) {
-    event.preventDefault()
+   // event.preventDefault()
     const form = event.target
     const formData = new FormData(form)
     const url = form.getAttribute('action')
@@ -10,27 +10,34 @@ function handleEditFormDidSubmit(event) {
     xhr.open(method, url)
     xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest")
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
-    xhr.onload = function() {
-        if (xhr.status === 201) {
-            form.reset()
-            window.location.href='/'
-        }
-        else if (xhr.status === 200) {
-            form.reset()
-            window.location.href='/'
-        }
-        else if (xhr.status === 400)
-        {
-            form.reset()
-        }
-        else if (xhr.status === 403)
-        {
-
-        }
-        else if (xhr.status === 404)
-        {
-            
-        }
+    xhr.onload = function () {
+         const serverResponse = xhr.response
+         if (xhr.status === 200) {
+             form.reset()
+             if (url.includes(`${'/api/edit-task/'}`)) {
+                 window.location.href = '/'
+             }
+             else if (url.includes(`${'/api/edit-list/'}`)) {
+                 window.location.href = '/lists'
+             }
+         }
+         else if (xhr.status === 400)
+         {
+             if (url.includes(`${'/api/edit-task/'}`)) {
+                 //alert('Invalid task.')
+             }
+             else if (url.includes(`${'/api/edit-list/'}`)) {
+                 alert('Invalid list.')
+             }
+         }
+         else if (xhr.status === 403)
+         {
+             alert(serverResponse['message'])
+         }
+         else if (xhr.status === 404)
+         {
+            alert(serverResponse['message']) 
+         }
     }
     xhr.send(formData)
 }
@@ -47,22 +54,29 @@ function handleDeleteFormDidSubmit(event) {
     xhr.open(method, url)
     xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest")
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
-    xhr.onload = function() {
+    xhr.onload = function () {
+        const serverResponse = xhr.response
         if (xhr.status === 200) {
             form.reset()
-            window.location.href='/'
+            if (url.includes(`${'/api/delete-task/'}`)) {
+                window.location.href = '/'
+            }
+            else if (url.includes(`${'/api/delete-list/'}`)) {
+                window.location.href = '/lists'
+            }
         }
         else if (xhr.status === 400)
         {
             form.reset()
+            alert(serverResponse['message'])
         }
         else if (xhr.status === 403)
         {
-
+            alert(serverResponse['message'])
         }
         else if (xhr.status === 404)
         {
-            
+            alert(serverResponse['message'])
         }
     }
     xhr.send(formData)
