@@ -1,6 +1,6 @@
 from django import forms
 from django.conf import settings
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -22,3 +22,14 @@ class SignUpForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+
+class UserUpdateForm(UserChangeForm):
+    
+    def __init__(self, *args, **kwargs):
+        super(UserUpdateForm, self).__init__(*args, **kwargs)
+        del self.fields['password']
+
+    class Meta:
+        model = User
+        fields = ('username','email','first_name','last_name')

@@ -20,6 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('authentication.urls')),
     path('', include('tasks.urls')),
-    re_path(r'profiles?/', include('accounts.urls')),
     path('api/', include('tasks.api.urls'))
 ]

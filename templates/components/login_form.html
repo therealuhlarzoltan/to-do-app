@@ -10,9 +10,7 @@
         {{ form.password|addclass:'form-control' }}
     </div>
     <div>
-    {% if form.error_messages %}
-    <small class="form-text text-danger">Please enter a correct username and password. Note that both fields may be case-sensitive.</small>
-    {% endif %}
+    <small class="form-text text-danger">{{form.non_field_errors}}</small>
     </div>
     <br>
     <button type='submit' class='btn btn-primary'>{% if btn_label %}

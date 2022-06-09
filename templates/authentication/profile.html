@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load myfilters %}
+{% block title %}Profile{% endblock title %}
+
+
+{% block content %}
+<div class='col-10 col-md-8 mx-auto py-3 px-3 mt-5' id="background">
+    <form method="POST" action="{% url 'profile' %}" id="form">
+        {% csrf_token %}
+        <div class="form-group">
+        <label >Username</label>
+        {{ form.username|addclass:'form-control' }}
+        <small class="form-text text-danger">{{form.username.errors}}</small>
+        <small class="form-text text-muted">{{form.username.help_text}}</small>
+        </div>
+        <div class="form-group">
+        <div class="row">
+            <div class="col form-group">
+                <label>First Name</label>
+                {{ form.first_name|addclass:'form-control' }}
+                <small class="form-text text-danger">{{form.first_name.errors}}</small>
+            </div>
+            <div class="col form-group">
+                <label>Last Name</label>
+                {{ form.last_name|addclass:'form-control' }}
+                <small class="form-text text-danger">{{form.last_name.errors}}</small>
+            </div>
+        </div>
+        </div>
+        <div class="form-group">
+            <label>Email Address</label>
+            {{ form.email|addclass:'form-control' }}
+            <small class="form-text text-danger">{{form.email.errors}}</small>
+            </div>
+        <br>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+    <br>
+        <p>Do you want to change your password? You can do it via <a href="{% url 'password' %}">this form.</a></p>
+    </div>
+
+<style>
+    body {background-color: #15acf3;}
+    #background {border:.5px solid #000000;
+  background: white;
+  border-radius:10px;
+  box-shadow:0px 0px 10px slategray;}
+
+</style>
+{% endblock content %}
