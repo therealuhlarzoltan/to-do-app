@@ -2,4 +2,4 @@
 
 This is a portfolio project created by me.
 
-Used technologies: Django Web Framework, Pure JavaScript, SQLlite database
+Used technologies: Django Web Framework, Pure JavaScript, SQLite database
